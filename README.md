@@ -44,17 +44,17 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 
 ## **System Architecture**
 ```text
-+-------------------+       +-------------------+       +-------------------+
++-------------------+       +-------------------+      +-------------------+
 |   Temperature     |       |       ROT        |       |                   |
 |   Sensors (x4)    |       |   Sensor (NMEA)  |       |    MQTT Broker    |
 |   via Modbus TCP  |       |    via TCP       |       | broker.hivemq.com |
 +---------+---------+       +---------+---------+       +---------+---------+
           |                           |                           |
           v                           v                           |
-   +--------------+          +----------------+                  |
-   |  Modbus      |          |  TCP Client    |                  |
-   |  Client      |          | (NMEA Parser)  |                  |
-   +------+-------+          +-------+--------+                  |
+   +--------------+          +----------------+                   |
+   |  Modbus      |          |  TCP Client    |                   |
+   |  Client      |          | (NMEA Parser)  |                   |
+   +------+-------+          +-------+--------+                   |
           |                           |                           |
           +------------+--------------+                           |
                        v                                          |
@@ -65,15 +65,14 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
                         |                                         |
                         v                                         v
                  +---------------+                   +--------------------------+
-                 |  MQTT Client  |------------------>|   Cloud / Dashboard     |
+                 |  MQTT Client  |------------------>|   Cloud / Dashboard      |
                  +---------------+                   +--------------------------+
 
 ---
 
 ## **Data Flow**
 - Reads **temperature data** from Modbus registers (0–3).
-- Reads **ROT data** from TCP server streaming NMEA sentences:
-$MGROT,2.0,A*33
+- Reads **ROT data** from TCP server streaming NMEA sentences: $MGROT,2.0,A*33
 
 
 - `2.0` → Rate of Turn (°/min)
@@ -81,7 +80,6 @@ $MGROT,2.0,A*33
 - Applies filtering:
 - Publish if **value changes > 1** or **5 minutes passed since last update**.
 - Publishes to **MQTT topics** on HiveMQ broker.
-
 ---
 
 ## **MQTT Topics**
@@ -104,4 +102,23 @@ $MGROT,2.0,A*33
 -  ModbusClient.* -> Modbus TCP client for temperature sensors
 -  TCPClient.* -> TCP client for ROT sensor (parses NMEA)
 -  main.cpp -> Entry point, orchestrates threads
+
+## **Compile**
+
+g++ -std=c++17 \
+    main.cpp SensorManager.cpp MQTTClient.cpp ModbusClient.cpp TcpClient.cpp \
+    -lpaho-mqttpp3 -lpaho-mqtt3as \
+    -lmodbus \
+    -lboost_system -lboost_thread \
+    -pthread \
+    -o MaritimeIoTGateway
+
+## **Run**
+./MaritimeIoTGateway
+
+## **Input Console Prints**
+<img width="323" height="248" alt="image" src="https://github.com/user-attachments/assets/c6ae083b-044d-41cc-817b-7de55fa8b114" />
+
+## **Output Console Prints**
+<img width="631" height="221" alt="image" src="https://github.com/user-attachments/assets/9680f908-7141-47c9-ba6b-f94c974956b0" />
 

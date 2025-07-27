@@ -43,31 +43,30 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
      ```
 
 ## **System Architecture**
-+-------------------+ +-------------------+ +-------------------+
-| Temperature | | ROT | | |
-| Sensors (x4) | | Sensor (NMEA) | | MQTT Broker |
-| via Modbus TCP | | via TCP | | broker.hivemq.com |
-+---------+---------+ +---------+---------+ +---------+---------+
-| | |
-v v |
-+--------------+ +----------------+ |
-| Modbus | | TCP Client | |
-| Client | | (NMEA Parser) | |
-+------+-------+ +-------+--------+ |
-| | |
-+------------+--------------+ |
-v |
-+--------------------+ |
-| Filtering Logic | |
-| (SensorManager) | |
-+---------+----------+ |
-| |
-v v
-+---------------+ +--------------------------+
-| MQTT Client |------------------>| Cloud / Dashboard |
-+---------------+ +--------------------------+
-
-
+```text
++-------------------+       +-------------------+       +-------------------+
+|   Temperature     |       |       ROT        |       |                   |
+|   Sensors (x4)    |       |   Sensor (NMEA)  |       |    MQTT Broker    |
+|   via Modbus TCP  |       |    via TCP       |       | broker.hivemq.com |
++---------+---------+       +---------+---------+       +---------+---------+
+          |                           |                           |
+          v                           v                           |
+   +--------------+          +----------------+                  |
+   |  Modbus      |          |  TCP Client    |                  |
+   |  Client      |          | (NMEA Parser)  |                  |
+   +------+-------+          +-------+--------+                  |
+          |                           |                           |
+          +------------+--------------+                           |
+                       v                                          |
+              +--------------------+                              |
+              |  Filtering Logic   |                              |
+              |  (SensorManager)   |                              |
+              +---------+----------+                              |
+                        |                                         |
+                        v                                         v
+                 +---------------+                   +--------------------------+
+                 |  MQTT Client  |------------------>|   Cloud / Dashboard     |
+                 +---------------+                   +--------------------------+
 
 ---
 
@@ -86,11 +85,11 @@ $MGROT,2.0,A*33
 ---
 
 ## **MQTT Topics**
-- Reads ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-1
-- Reads ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-2
-- Reads ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-3
-- Reads ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-4
-- Reads ows-challenge/mv-sinking-boat/main-crane/rot
+-  ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-1
+-  ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-2
+-  ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-3
+-  ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-4
+-  ows-challenge/mv-sinking-boat/main-crane/rot
 
 ---
 
@@ -100,9 +99,9 @@ $MGROT,2.0,A*33
 ---
 
 ## **Project Structure**
-- Reads SensorManager.* -> Handles filtering and last-sent tracking
-- Reads MQTTClient.* -> MQTT connection and publishing logic
-- Reads ModbusClient.* -> Modbus TCP client for temperature sensors
-- Reads TCPClient.* -> TCP client for ROT sensor (parses NMEA)
-- Reads main.cpp -> Entry point, orchestrates threads
+-  SensorManager.* -> Handles filtering and last-sent tracking
+-  MQTTClient.* -> MQTT connection and publishing logic
+-  ModbusClient.* -> Modbus TCP client for temperature sensors
+-  TCPClient.* -> TCP client for ROT sensor (parses NMEA)
+-  main.cpp -> Entry point, orchestrates threads
 

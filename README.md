@@ -1,1 +1,64 @@
-# Maritime-_IoT_Gateway
+# Maritime IoT Gateway
+
+## **Overview**
+This project implements a **Maritime IoT Gateway** for a crane system on a vessel. The gateway collects sensor data from multiple sources, applies filtering logic, and publishes the processed information to an MQTT broker for cloud integration.
+
+### **Sensors Supported**
+- **4 Temperature Sensors** via **Modbus TCP**
+- **Rate of Turn (ROT) Sensor** via **TCP Socket** (NMEA 0183 format)
+
+The application is modular, multi-threaded, and optimized to reduce unnecessary data transmission.
+
+---
+
+## **Features**
+✔ Reads multiple sensors concurrently (Modbus & TCP)  
+✔ Filters updates to reduce bandwidth usage  
+✔ Publishes structured data with timestamp and validity  
+✔ Implements Last Will & Testament (LWT) for connection loss detection  
+✔ Works with simulation scripts provided by MacGregor  
+
+---
+
+## **System Design**
+### **Workflow**
+1. **Modbus TCP (Temperature Sensors)**
+   - Connects to a PLC-like Modbus TCP server
+   - Reads registers 0–3 for motor temperatures every 2 seconds
+2. **TCP Socket (ROT Sensor)**
+   - Connects to a TCP server streaming NMEA sentences like:
+     ```
+     $MGROT,2.0,A*33
+     ```
+   - Extracts ROT value and validity
+3. **Filtering**
+   - Publish only if:
+     - Difference > **1°C** (temperature) or **1°/min** (ROT), OR
+     - **5 minutes** since last update
+4. **MQTT Publishing**
+   - Publishes to `broker.hivemq.com` under structured topics
+   - Example message:
+     ```
+     "26.0°C, Valid, 2025-07-27 at 12:30 UTC"
+     ```
+
+## **Topics**
+ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-1
+ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-2
+ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-3
+ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-4
+ows-challenge/mv-sinking-boat/main-crane/rot
+
+yaml
+Copy
+Edit
+
+---
+
+## **Project Structure**
+SensorManager.* -> Handles filtering and last-sent tracking
+MQTTClient.* -> MQTT connection and publishing logic
+ModbusClient.* -> Modbus TCP client for temperature sensors
+TCPClient.* -> TCP client for ROT sensor (parses NMEA)
+main.cpp -> Entry point, orchestrates threads
+

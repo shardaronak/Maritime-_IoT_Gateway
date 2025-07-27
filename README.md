@@ -52,10 +52,10 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 +---------+---------+       +---------+---------+       +---------+---------+
           |                           |                           |
           v                           v                           |
-   +--------------+          +----------------+                  |
-   |  Modbus      |          |  TCP Client    |                  |
-   |  Client      |          | (NMEA Parser)  |                  |
-   +------+-------+          +-------+--------+                  |
+   +--------------+          +----------------+                   |
+   |  Modbus      |          |  TCP Client    |                   |
+   |  Client      |          | (NMEA Parser)  |                   |
+   +------+-------+          +-------+--------+                   |
           |                           |                           |
           +------------+--------------+                           |
                        v                                          |
@@ -66,9 +66,10 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
                         |                                         |
                         v                                         v
                  +---------------+                   +--------------------------+
-                 |  MQTT Client  |------------------>|   Cloud / Dashboard     |
+                 |  MQTT Client  |------------------>|   Cloud / Dashboard      |
                  +---------------+                   +--------------------------+
-
+```
+---
 
 ## **Data Flow**
 
@@ -81,6 +82,7 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 - Applies filtering:
 - Publish if **value changes > 1** or **5 minutes passed since last update**.
 - Publishes to **MQTT topics** on HiveMQ broker.
+
 ---
 
 ## **MQTT Topics**
@@ -94,8 +96,9 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 ---
 
 ## **Example MQTT Payload**
+   ```
 26.0°C, Valid, 2025-07-27 at 12:30 UTC
-
+   ```
 ---
 
 ## **Project Structure**
@@ -108,7 +111,7 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 
 ---
 ## **Compile**
-
+```
 g++ -std=c++17 \
     main.cpp SensorManager.cpp MQTTClient.cpp ModbusClient.cpp TcpClient.cpp \
     -lpaho-mqttpp3 -lpaho-mqtt3as \
@@ -116,14 +119,19 @@ g++ -std=c++17 \
     -lboost_system -lboost_thread \
     -pthread \
     -o MaritimeIoTGateway
+```
 ---
 
 ## **Run**
+
+```
 ./MaritimeIoTGateway
+```
 ---
 
-## **Input Console Prints**
-```text
+
+##  **Input Console Prints**
+```
 [root@node1 crane_simulation]# python crane_simulation.py
 Measured Value: [56, 94, 6, 93]
 Serving on ('127.0.0.1', 8888)
@@ -155,10 +163,11 @@ Send: '$MGROT,10.0,A*1D'
 Measured Value: [74, 31, 34, 55]
 Send: '$MGROT,231.0,A*2C'
 Measured Value: [14, 80, 3, 15]
-```text
+```
+---
 
 ## **Output Console Prints**
-```text
+   ```
 
 [root@node1 new_gateway]# ./MaritimeIoTGateway
 MQTT Connected
@@ -183,5 +192,5 @@ MQTT Connected
 [MQTT] Published: 9°C, Valid, 2025-07-27 at 18:38 UTC to topic: ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-4
 [Modbus] Published temp4: 9°C, Valid, 2025-07-27 at 18:38 UTC
 [WebSocketClient] Received: $MGROT,7.0,A*2B
-
+   ```
 

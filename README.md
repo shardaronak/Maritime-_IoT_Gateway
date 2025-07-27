@@ -129,6 +129,7 @@ Send: '$MGROT,10.0,A*1D'
 Measured Value: [74, 31, 34, 55]
 Send: '$MGROT,231.0,A*2C'
 Measured Value: [14, 80, 3, 15]
+```text
 
 ## **Output Console Prints**
 ```text

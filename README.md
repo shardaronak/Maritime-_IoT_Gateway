@@ -111,10 +111,11 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 
 ---
 ### **Dependencies**
-Install required libraries on Ubuntu/Debian:
+Install required libraries 
 ```bash
 sudo apt-get update
 sudo apt-get install g++ libmodbus-dev libpaho-mqttpp3-dev libpaho-mqtt3as-dev libboost-all-dev 
+Note : for boost I have manually installed boost169 
 ```
 
 ## **Compile**

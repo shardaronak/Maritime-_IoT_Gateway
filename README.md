@@ -68,8 +68,6 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
                  |  MQTT Client  |------------------>|   Cloud / Dashboard      |
                  +---------------+                   +--------------------------+
 
----
-
 ## **Data Flow**
 
 - Reads **temperature data** from Modbus registers (0–3).

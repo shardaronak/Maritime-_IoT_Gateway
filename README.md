@@ -110,10 +110,17 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 -  main.cpp -> Entry point, orchestrates threads
 
 ---
+### **Dependencies**
+Install required libraries on Ubuntu/Debian:
+```bash
+sudo apt-get update
+sudo apt-get install g++ libmodbus-dev libpaho-mqttpp3-dev libpaho-mqtt3as-dev libboost-all-dev 
+```
+
 ## **Compile**
 ```
 g++ -std=c++17 \
-    main.cpp SensorManager.cpp MQTTClient.cpp ModbusClient.cpp TcpClient.cpp \
+    main.cpp SensorManager.cpp MQTTClient.cpp ModbusClient.cpp TCPClient.cpp \
     -lpaho-mqttpp3 -lpaho-mqtt3as \
     -lmodbus \
     -lboost_system -lboost_thread \

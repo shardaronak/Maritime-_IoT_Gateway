@@ -42,16 +42,62 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
      "26.0°C, Valid, 2025-07-27 at 12:30 UTC"
      ```
 
-## **Topics**
+## **System Architecture**
++-------------------+ +-------------------+ +-------------------+
+| Temperature | | ROT | | |
+| Sensors (x4) | | Sensor (NMEA) | | MQTT Broker |
+| via Modbus TCP | | via TCP | | broker.hivemq.com |
++---------+---------+ +---------+---------+ +---------+---------+
+| | |
+v v |
++--------------+ +----------------+ |
+| Modbus | | TCP Client | |
+| Client | | (NMEA Parser) | |
++------+-------+ +-------+--------+ |
+| | |
++------------+--------------+ |
+v |
++--------------------+ |
+| Filtering Logic | |
+| (SensorManager) | |
++---------+----------+ |
+| |
+v v
++---------------+ +--------------------------+
+| MQTT Client |------------------>| Cloud / Dashboard |
++---------------+ +--------------------------+
+
+yaml
+Copy
+Edit
+
+---
+
+## **Data Flow**
+- Reads **temperature data** from Modbus registers (0–3).
+- Reads **ROT data** from TCP server streaming NMEA sentences:
+$MGROT,2.0,A*33
+
+
+- `2.0` → Rate of Turn (°/min)
+- `A` → Valid data
+- Applies filtering:
+- Publish if **value changes > 1** or **5 minutes passed since last update**.
+- Publishes to **MQTT topics** on HiveMQ broker.
+
+---
+
+## **MQTT Topics**
 ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-1
 ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-2
 ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-3
 ows-challenge/mv-sinking-boat/main-crane/luffing/temp-mot-4
 ows-challenge/mv-sinking-boat/main-crane/rot
 
-yaml
-Copy
-Edit
+---
+
+## **Example MQTT Payload**
+26.0°C, Valid, 2025-07-27 at 12:30 UTC
 
 ---
 

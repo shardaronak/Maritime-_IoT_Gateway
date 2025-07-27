@@ -70,7 +70,7 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
 
 ---
 
-## **Data Flow*
+## **Data Flow**
 
 - Reads **temperature data** from Modbus registers (0–3).
 - Reads **ROT data** from TCP server streaming NMEA sentences: $MGROT,2.0,A*33

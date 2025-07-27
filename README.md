@@ -42,31 +42,7 @@ The application is modular, multi-threaded, and optimized to reduce unnecessary 
      "26.0°C, Valid, 2025-07-27 at 12:30 UTC"
      ```
 
-## **System Architecture**
-```text
-+-------------------+       +-------------------+      +-------------------+
-|   Temperature     |       |       ROT        |       |                   |
-|   Sensors (x4)    |       |   Sensor (NMEA)  |       |    MQTT Broker    |
-|   via Modbus TCP  |       |    via TCP       |       | broker.hivemq.com |
-+---------+---------+       +---------+---------+       +---------+---------+
-          |                           |                           |
-          v                           v                           |
-   +--------------+          +----------------+                   |
-   |  Modbus      |          |  TCP Client    |                   |
-   |  Client      |          | (NMEA Parser)  |                   |
-   +------+-------+          +-------+--------+                   |
-          |                           |                           |
-          +------------+--------------+                           |
-                       v                                          |
-              +--------------------+                              |
-              |  Filtering Logic   |                              |
-              |  (SensorManager)   |                              |
-              +---------+----------+                              |
-                        |                                         |
-                        v                                         v
-                 +---------------+                   +--------------------------+
-                 |  MQTT Client  |------------------>|   Cloud / Dashboard      |
-                 +---------------+                   +--------------------------+
+---
 
 ## **Data Flow**
 

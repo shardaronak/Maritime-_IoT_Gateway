@@ -39,7 +39,7 @@ void startTCPClient(SensorManager& manager, MQTTClient& mqtt) {
              std::string payload(buffer);
              std::cout << "[WebSocketClient] Received: " << payload << std::endl;
 
-             // Extract value from payload like you do in websocket handler
+             // Extract value from payload
              size_t c1 = payload.find(',');
              size_t c2 = payload.find(',', c1 + 1);
              if (c1 != std::string::npos && c2 != std::string::npos) {
